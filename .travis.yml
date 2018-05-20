@@ -1,0 +1,36 @@
+language: python
+python:
+- 2.7
+- 3.6
+- 3.6-dev
+before_install:
+- sudo apt-get update
+- sudo apt-get -y install python-pip
+- sudo pip install --upgrade pip
+- pip install --upgrade pip
+- pip install codecov
+- pip install pycodestyle
+- pip install pydocstyle
+- pip install tox
+- pip install pytest
+- pip install python-coveralls
+install:
+- pip install -r requirements.txt
+
+script:
+- coverage run tests/test_mmbot.py
+- codecov
+matrix:
+  include:
+  - python: 3.6
+    env: TOXENV=py36
+  - python: 2.7
+    env: TOXENV=py27
+
+after_success:
+- coverage combine && codecov
+- coveralls
+notifications:
+  email:
+    on_success: always
+    on_failure: always
